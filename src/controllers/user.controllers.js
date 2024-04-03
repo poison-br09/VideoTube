@@ -30,7 +30,7 @@ const registerUser = asyncHandler(async (req, res)=>{
     }
 
     // chcek existence
-    const existedUser = User.findOne({
+    const existedUser = await User.findOne({
         $or: [{username},{email}]
     })
 
@@ -80,4 +80,17 @@ const registerUser = asyncHandler(async (req, res)=>{
 
 })
 
-export {registerUser}
+const loginUser = asyncHandler(async(req, res)=>{
+    //req body se data
+
+    const {email, userName, password}= req.body
+    
+    // username or email hai ya nahi
+    // find user
+    // password
+    // acess and refresh token dono hi generate krke send karna hoga
+    // send secured cookies
+    
+})
+
+export {registerUser,loginUser}
