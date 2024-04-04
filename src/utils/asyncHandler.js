@@ -1,5 +1,5 @@
 const asyncHandler = (requestHandler) => {
-    // Both methods are good to go.... 
+    // Both methods are good to go....
     return (req, res, next) => {
         Promise.resolve(requestHandler(req, res, next)).catch((err) => next(err))
     }
@@ -9,7 +9,7 @@ const asyncHandler = (requestHandler) => {
 export { asyncHandler }
 
 // const asyncHandler = () => {}
-// const asyncHandler = (func) => {() => {}} // short form  
+// const asyncHandler = (func) => {() => {}} // short form
 // const asyncHandler = (func) => async () => {}
 
 
