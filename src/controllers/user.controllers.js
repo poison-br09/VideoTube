@@ -285,4 +285,62 @@ const getUserChannelProfile = asyncHandler(async(req, res)=>{
 
 })
 
-export {registerUser,loginUser, logOutUser, refreshAccessToken, getUserChannelProfile}
+const getWatchHistory = asyncHandler(async(req, res)=>{
+    const user = await User.aggregate([
+        {
+            $match:{
+                _id: new mongoose.Types.ObjectId(req.user._id)
+            }
+        },
+        {
+            $lookup:{
+                from: "videos",
+                localField: "watchHistory",
+                foreignField: "_id",
+                as: "watchHistory",
+                pipeline: [
+                    {
+                        $lookup:{
+                            from : "users",
+                            localField: "owner",
+                            foreignField: "_id",
+                            as: "owner",
+                            pipeline:[
+                                {
+                                    // used for select some specific values
+                                    $project: {
+                                        fullName: 1,
+                                        username: 1,
+                                        avatar: 1,
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        // used for restrucuring the data, for better understanding the frontend guy.
+                        $addFields: {
+                            owner: {
+                                $first: "owner" // isme se easily data aayega... ye ek object bana ke chor dega usse value extract kar lo
+                            }
+                        }
+                    }
+                
+                ]
+            }
+        }
+    ])
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200, 
+            user[0].watchHistory,
+            "Watch history fetched successfully"
+        )
+    )
+    
+})
+
+export {registerUser,loginUser, logOutUser, refreshAccessToken, getUserChannelProfile, getWatchHistory}
