@@ -2,8 +2,9 @@ import { Router } from "express";
 import { getUserChannelProfile, getWatchHistory, logOutUser, loginUser, refreshAccessToken, registerUser } from "../controllers/user.controllers.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
-import { verify } from "jsonwebtoken";
-
+// Corrected import for jsonwebtoken
+import pkg from 'jsonwebtoken';
+const { verify } = pkg;
 
 const router = Router()
 
@@ -16,12 +17,12 @@ router.route("/register").post(
             },
             {
                 name: "coverImage",
-                maxCount:1
+                maxCount: 1
             }
         ]
-        ),
+    ),
     registerUser
-    )
+)
 
 router.route("/login").post(loginUser)
 
@@ -42,5 +43,4 @@ router.route("/c/:username").get(verifyJWT, getUserChannelProfile)
 
 router.route("/c/:history").get(verifyJWT, getWatchHistory)
 
-
-export default router
+export default router;
